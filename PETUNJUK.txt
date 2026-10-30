@@ -1,0 +1,14 @@
+UNDANGAN NIKAH (skema sendiri, bukan file V-13 asli) - STATUS: BELUM DIUJI DI FIREBASE/GITHUB
+1. Salin folder ini untuk tiap undangan baru. Buka dengan VS Code (Live Server).
+2. Isi data/data-undangan.js (ganti data DEMO, kode unik, siteUrl, foto, musik).
+3. Taruh foto di foto/ (cover, pria, wanita, penutup, g1-g3; < 400 KB) dan MP3 di musik/.
+4. Firebase Console: buat proyek, aktifkan Authentication (Email/Password) dan Firestore.
+5. Buat pengguna admin: email KODE@admin.undangan (huruf kecil), kata sandi min. 6 karakter.
+6. Salin config web ke blok firebase di data-undangan.js. Edit daftar kode di firebase.rules, lalu Publish di tab Rules.
+7. Uji dengan Firebase Emulator: tanpa login, login salah, lintas kode, hapus tanpa izin, teks > 300 karakter, hadir/jumlah tidak valid.
+8. python tools/sinkron-meta.py (pip install pillow untuk og.jpg).
+9. Unggah ke GitHub (jangan simpan kata sandi/kunci rahasia), aktifkan Pages (root), isi siteUrl, sinkron ulang, unggah lagi.
+10. Uji di HP dan WhatsApp. Serahkan link undangan, link admin, kata sandi secara terpisah.
+Catatan: pengaturan "tampilkan ucapan" hanya mengatur tampilan; ucapan tetap bisa dibaca publik oleh siapa pun yang tahu kode undangan.
+
+Model: Plegmatis (si cinta damai dan tenang), Des: putih hangat dengan biru-hijau sage lembut dan abu kebiruan, tanpa kontras keras.
