@@ -7,6 +7,8 @@ d = (R / "data/data-undangan.js").read_text(encoding="utf-8")
 def top(k): return re.search(k + r'\s*:\s*"([^"]*)"', d).group(1)
 def sub(o, k): return re.search(o + r'\s*:\s*\{[^}]*?' + k + r'\s*:\s*"([^"]*)"', d).group(1)
 pria, wanita, tgl, url = sub("pria", "panggilan"), sub("wanita", "panggilan"), sub("akad", "tanggal"), top("siteUrl")
+kl = re.search(r'"?pihakKlien"?\s*:\s*"([^"]*)"', d)
+if kl and kl.group(1) == "wanita": pria, wanita = wanita, pria  # urutan nama mengikuti pihak klien
 judul = f"The Wedding of {pria} & {wanita}"
 desk = f"Dengan memohon rahmat Allah SWT, kami mengundang Anda ke pernikahan kami pada {tgl}."
 og = url.rstrip("/") + "/foto/og.jpg"

@@ -25,10 +25,13 @@ window.DATA_UNDANGAN = {
   galeri: ["foto/galeri1.avif","foto/galeri2.avif", "foto/galeri3.avif"],           // contoh: ["foto/g1.jpg","foto/g2.jpg"] (kosong = bagian disembunyikan)
   live: "",             // tautan YouTube/Zoom
   hadiah: { rekening: [ // maksimal 2
-    { label: "Mempelai Pria", jenis: "Nomor Rekening (BANK DEMO)", nomor: "0000000000", nama: "Raka Pratama (DEMO)" },
-    { label: "Mempelai Wanita", jenis: "Nomor E-Wallet (DEMO)", nomor: "081200000000", nama: "Salsabila Putri (DEMO)" } ],
+    { label: "Mempelai Pria", jenis: "BRI", nomor: "0000000000", nama: "Raka Pratama (DEMO)" },
+    { label: "Mempelai Wanita", jenis: "GOPAY", nomor: "081200000000", nama: "Salsabila Putri (DEMO)" } ],
     penerima: "Salsa (081200000000)", alamatKado: "Jl. Contoh No. 2, Bekasi (DEMO)" },
   keluarga: { aktif: true, daftar: ["Bpk. Contoh A (DEMO)", "Kel. Besar Contoh B (DEMO)", "Ustadz Contoh C (DEMO)", "Segenap Pemuda/i Contoh (DEMO)", "Kel. Besar Contoh D (DEMO)", "Bpk. Contoh E (DEMO)", "Kel. Besar Contoh F (DEMO)", "Rekan Kerja Contoh (DEMO)", "Kel. Besar Contoh G (DEMO)", "Sahabat Contoh (DEMO)"] },
+  logoBank: true,
+  pihakKlien: "wanita",           // "pria" / "wanita": nama pihak klien (pemesan) tampil lebih dulu
+  panelAdmin: { ucapanPublik: true, urutanNama: true, pesanWa: true },   // true/false: tampil/sembunyi di panel admin
   tampil: { ucapan: true, hadiah: true },
   templatPesan: "Assalamu'alaikum Wr. Wb.\n\nKepada Yth. {nama}\n\nDengan memohon rahmat Allah SWT, kami mengundang Bapak/Ibu/Saudara/i ke pernikahan {mempelai}.\n\nAkad: {akad}\nResepsi: {resepsi}\n\nInfo lengkap & konfirmasi kehadiran:\n{link}\n\nTerima kasih.",
   firebase: { apiKey: "AIzaSyBEA92p-xAjSyvDTWT09-zsuEDyjZg2dZw", authDomain: "undangan-saya.firebaseapp.com", projectId: "undangan-saya", appId: "1:996120910513:web:5df1e68b5e496fd899e090" }

@@ -5,18 +5,28 @@
 <div id="pn" hidden>
 <div class="c g" id="sum"></div>
 <div class="c"><b>Tambah tamu</b><input id="tn" maxlength="40" placeholder="Nama tamu"><input id="tw" placeholder="No. WhatsApp (opsional, hanya jika tamu setuju)"><button id="ta">Tambah</button><hr><b>Banyak tamu (satu per baris)</b><textarea id="bk" rows="4"></textarea><button id="tb">Tambah semua</button></div>
-<div class="c"><b>Templat pesan</b><textarea id="tp" rows="8"></textarea><button id="tps">Simpan templat</button>
-<p><label><input type="checkbox" id="vu" style="width:auto"> Tampilkan ucapan publik</label> <button id="vs" class="o">Simpan visibilitas</button></p></div>
+<div class="c" id="cPs"><b>Templat pesan</b><textarea id="tp" rows="8"></textarea><button id="tps">Simpan templat</button></div>
+<div class="c" id="cSw"><p id="rUp"><label><input type="checkbox" id="vu" style="width:auto"> Tampilkan ucapan publik</label> <button id="vs" class="o">Simpan visibilitas</button></p>
+<p id="rUr"><label>Klien (pemesan) dari pihak <select id="ur" style="padding:7px 10px;border:1px solid #cfc8b4;border-radius:8px;font:inherit"><option value="pria">Pria</option><option value="wanita">Wanita</option></select></label> <button id="us" class="o">Simpan urutan</button><br><small>Nama pihak klien tampil lebih dulu di undangan.</small></p></div>
 <div class="c"><b>Tamu</b><div id="tl"></div></div><div class="c"><b>RSVP & ucapan</b><div id="ul"></div></div>
 <button class="o" id="lo">Keluar</button></div>
-<script src="data/data-undangan.js"></script><script src="js/fb.js"></script>
+<script src="data/data-undangan.js?v=pa"></script><script src="js/fb.js"></script>
 <script>
 const D=DATA_UNDANGAN,$=s=>document.querySelector(s),e=s=>String(s??'').replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';'),say=m=>$('#st').textContent=m;
-let tpl=D.templatPesan,TM=[];
+let tpl=D.templatPesan,TM=[],urut=(D.pihakKlien||D.urutanNama)==='wanita'?'wanita':'pria';
+/* true/false di data-undangan.js > panelAdmin: tampilkan atau sembunyikan tiap pengaturan di panel ini */
+function panelAdmin(){
+  const P=D.panelAdmin||{},on=k=>{const v=P[k];return !(v===false||v===0||(typeof v==='string'&&/^(false|0|tidak|no|off|sembunyi)$/i.test(v.trim())))};
+  const tampil=(s,ok)=>{const x=document.querySelector(s);if(x)x.style.display=ok?'':'none'};
+  tampil('#cPs',on('pesanWa'));tampil('#rUp',on('ucapanPublik'));tampil('#rUr',on('urutanNama'));
+  tampil('#cSw',on('ucapanPublik')||on('urutanNama'));
+}
+panelAdmin();
+
 const link=n=>D.siteUrl+'?to='+encodeURIComponent(n),ev=a=>`${a.tanggal} ${a.jam} ${a.zona}, ${a.tempat}`;
-const msg=n=>tpl.replace(/\{(\w+)\}/g,(_,k)=>({nama:n,pria:D.pria.panggilan,wanita:D.wanita.panggilan,mempelai:D.pria.panggilan+' & '+D.wanita.panggilan,tanggal:D.akad.tanggal,akad:ev(D.akad),resepsi:D.resepsi&&D.resepsi.aktif?ev(D.resepsi):'-',link:link(n)})[k]??'{'+k+'}');
+const msg=n=>tpl.replace(/\{(\w+)\}/g,(_,k)=>({nama:n,pria:D.pria.panggilan,wanita:D.wanita.panggilan,mempelai:(urut==='wanita'?[D.wanita,D.pria]:[D.pria,D.wanita]).map(x=>x.panggilan).join(' & '),tanggal:D.akad.tanggal,akad:ev(D.akad),resepsi:D.resepsi&&D.resepsi.aktif?ev(D.resepsi):'-',link:link(n)})[k]??'{'+k+'}');
 const num=w=>{w=(w||'').replace(/\D/g,'');return w.startsWith('0')?'62'+w.slice(1):w};
-async function muat(){try{const[t,u,c]=await Promise.all([FB.tamu(),FB.ucapan(),FB.pengaturan()]);TM=t;if(c.templat)tpl=c.templat;$('#tp').value=tpl;$('#vu').checked=c.ucapan!==false;
+async function muat(){try{const[t,u,c]=await Promise.all([FB.tamu(),FB.ucapan(),FB.pengaturan()]);TM=t;if(c.templat)tpl=c.templat;$('#tp').value=tpl;$('#vu').checked=c.ucapan!==false;if(c.urutNama==='pria'||c.urutNama==='wanita')urut=c.urutNama;$('#ur').value=urut;
 $('#sum').innerHTML=`<div><b>${t.length}</b>Tamu</div><div><b>${t.filter(x=>x.terkirim).length}</b>Terkirim</div><div><b>${u.length}</b>RSVP</div><div><b>${u.filter(x=>x.hadir=='hadir').reduce((a,x)=>a+x.jumlah,0)}</b>Orang hadir</div>`;
 $('#tl').innerHTML=t.map((x,i)=>`<div class="r"><b>${e(x.nama)}</b> ${x.terkirim?'✓':''}<br><small>${e(link(x.nama))}</small><br><button data-k="${i}">Kirim WhatsApp</button><button class="o" data-s="${i}">Salin pesan</button><button class="o" data-h="${x.id}">Hapus</button></div>`).join('')||'Belum ada tamu.';
 $('#ul').innerHTML=u.map(x=>`<div class="r"><b>${e(x.nama)}</b> · ${e(x.hadir)} · ${x.jumlah} orang<br>${e(x.pesan)}<br><button class="o" data-u="${x.id}">Hapus</button></div>`).join('')||'Belum ada.'}catch(x){say('Gagal memuat: '+x.message)}}
@@ -32,5 +42,6 @@ const add=async l=>{for(const n of l){const[a,w]=n.split('|').map(s=>s.trim());i
 $('#ta').onclick=()=>add([$('#tn').value+'|'+$('#tw').value]).then(()=>{$('#tn').value=$('#tw').value=''}).catch(x=>say(x.message));
 $('#tb').onclick=()=>add($('#bk').value.split('\n')).then(()=>$('#bk').value='').catch(x=>say(x.message));
 $('#tps').onclick=()=>FB.simpanPengaturan({templat:$('#tp').value}).then(()=>{tpl=$('#tp').value;say('Templat tersimpan')}).catch(x=>say(x.message));
+$('#us').onclick=()=>{const u=$('#ur').value;FB.simpanPengaturan({urutNama:u}).then(()=>{urut=u;say('Urutan tersimpan')}).catch(x=>say(x.message))};
 $('#vs').onclick=()=>FB.simpanPengaturan({ucapan:$('#vu').checked}).then(()=>say('Tersimpan')).catch(x=>say(x.message));
 </script></main></body></html>
